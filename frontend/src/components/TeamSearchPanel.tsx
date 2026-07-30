@@ -24,6 +24,7 @@ export function TeamSearchPanel({ refreshKey }: TeamSearchPanelProps) {
 
   useEffect(() => {
     if (!applied) return
+    const requirementsToCheck = applied
 
     const controller = new AbortController()
     const { signal } = controller
@@ -33,12 +34,12 @@ export function TeamSearchPanel({ refreshKey }: TeamSearchPanelProps) {
       setError(null)
       try {
         const response = await checkTeam(
-          { requirements: applied.map(requirementToCheckPayload) },
+          { requirements: requirementsToCheck.map(requirementToCheckPayload) },
           { signal },
         )
         if (signal.aborted) return
         const nextResults: TeamRequirementResult[] = response.results.map((row, index) => ({
-          requirement: applied[index],
+          requirement: requirementsToCheck[index],
           eligible: row.eligible,
           assigned: row.assigned,
           labels: row.labels ?? [],
