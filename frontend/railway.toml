@@ -1,0 +1,7 @@
+[build]
+buildCommand = "npm ci && npm run build"
+
+[deploy]
+startCommand = "npx serve -s dist -l tcp://0.0.0.0:$PORT"
+healthcheckPath = "/"
+restartPolicyType = "ON_FAILURE"

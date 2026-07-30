@@ -55,6 +55,12 @@ if __name__ == "__main__":
 
     import uvicorn
 
-    host = os.environ.get("HOST", "127.0.0.1")
-    reload = os.environ.get("RELOAD", "true").lower() in {"1", "true", "yes"}
-    uvicorn.run("server:app", host=host, port=8000, reload=reload)
+    port = int(os.environ.get("PORT", "8000"))
+    on_railway = bool(os.environ.get("RAILWAY_ENVIRONMENT"))
+    host = os.environ.get("HOST", "0.0.0.0" if on_railway else "127.0.0.1")
+    reload = os.environ.get("RELOAD", "false" if on_railway else "true").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    uvicorn.run("server:app", host=host, port=port, reload=reload)

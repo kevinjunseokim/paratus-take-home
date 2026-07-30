@@ -36,3 +36,30 @@ npm run dev
 ```
 
 App: http://localhost:5173
+
+## Deploy on Railway
+
+Create one Railway project from this GitHub repo, then add three services:
+
+1. **Postgres** — Railway plugin (provides `DATABASE_URL`)
+2. **API** — root directory `backend`
+3. **Frontend** — root directory `frontend`
+
+### API service variables
+
+| Variable | Value |
+|---|---|
+| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
+| `CORS_ORIGINS` | Frontend public URL (e.g. `https://….up.railway.app`) |
+| `OPENAI_API_KEY` | Optional; enables Ask |
+| `OPENAI_MODEL` | Optional (default `gpt-4o-mini`) |
+
+### Frontend service variables
+
+| Variable | Value |
+|---|---|
+| `VITE_API_BASE_URL` | API public URL (e.g. `https://….up.railway.app`) |
+
+`VITE_API_BASE_URL` is baked in at build time — set it before the first deploy (or redeploy after changing it).
+
+`backend/railway.toml` and `frontend/railway.toml` define migrate/start and build/start commands.
