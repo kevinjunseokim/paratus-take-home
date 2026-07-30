@@ -1,0 +1,123 @@
+version: "2026-07-29"
+sources:
+  - DAFMAN 36-2100
+  - DAFECD
+  - DAFOCD
+
+career_groups:
+  "1": Operations
+  "2": Logistics
+  "3": Support
+
+career_fields:
+  "1A": Aircrew Operations
+  "11": Pilot
+
+families:
+  "1A1X2":
+    personnel_type: enlisted
+    career_group: "1"
+    career_field: "1A"
+    subdivision: "1"
+    subdivision_title: Aircrew Operations
+    title: Mobility Force Aviator
+    specialty_char: "2"
+    wildcard_role: skill_level
+    skill_levels:
+      "1": Helper
+      "3": Apprentice
+      "5": Journeyman
+      "7": Craftsman
+      "9": Superintendent
+      "0": Chief Enlisted Manager
+    suffixes:
+      A: C-17 Loadmaster
+      B: C-5 Loadmaster
+      C: KC-135 Boom Operator
+      D: C-130J Loadmaster
+      E: KC-10 Boom Operator
+      F: C-130H Loadmaster
+      G: KC-46 Boom Operator
+      Z: Other
+
+  "1A1X3":
+    personnel_type: enlisted
+    career_group: "1"
+    career_field: "1A"
+    subdivision: "1"
+    subdivision_title: Aircrew Operations
+    title: Special Mission Aviator
+    specialty_char: "3"
+    wildcard_role: skill_level
+    skill_levels:
+      "1": Helper
+      "3": Apprentice
+      "5": Journeyman
+      "7": Craftsman
+      "9": Superintendent
+      "0": Chief Enlisted Manager
+    suffixes:
+      A: AC-130 Gunner
+      B: AC-130 Sensor Operator
+      Q: AC-130J
+      Z: Other
+
+  "11MX":
+    personnel_type: officer
+    career_group: "1"
+    career_field: "11"
+    title: Mobility Pilot
+    utilization: M
+    wildcard_role: qualification_level
+    qualification_levels:
+      "1": Entry
+      "2": Intermediate
+      "3": Qualified
+      "4": Staff
+    suffixes:
+      F: C-130
+      K: C-17
+      N: C-5
+      Q: C-130J
+      R: KC-46
+      S: KC-135
+      T: KC-10
+      Y: Generalist
+      Z: Other
+
+  "11SX":
+    personnel_type: officer
+    career_group: "1"
+    career_field: "11"
+    title: Special Operations Pilot
+    utilization: S
+    wildcard_role: qualification_level
+    qualification_levels:
+      "1": Entry
+      "2": Intermediate
+      "3": Qualified
+      "4": Staff
+    suffixes:
+      A: AC-130
+      B: CV-22
+      C: MC-130
+      E: U-28
+      F: Other rotary
+      Q: AC-130J
+      Z: Other
+
+# Resolution-only shorthands (not valid as member AFSCs).
+# e.g. 11MK → Mobility Pilot + C-17 with omitted qualification level.
+shorthands:
+  "11MK":
+    canonical_pattern: "11MXK"
+    family: "11MX"
+    suffix: K
+  "11MR":
+    canonical_pattern: "11MXR"
+    family: "11MX"
+    suffix: R
+  "11SF":
+    canonical_pattern: "11SXF"
+    family: "11SX"
+    suffix: F
