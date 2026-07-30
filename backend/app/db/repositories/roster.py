@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 
-from sqlalchemy import select, update
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.models import ImportIssueRecord, MemberRecord, RosterUploadRecord
@@ -161,3 +161,14 @@ class RosterRepository:
     def delete_upload(self, upload: RosterUploadRecord) -> None:
         self._session.delete(upload)
         self._session.flush()
+
+    def clear_all_members(self) -> int:
+        deleted = self._session.scalar(select(func.count()).select_from(MemberRecord)) or 0
+        self._session.execute(delete(MemberRecord))
+        self._session.execute(
+            update(RosterUploadRecord)
+            .where(RosterUploadRecord.is_active.is_(True))
+            .values(is_active=False)
+        )
+        self._session.flush()
+        return int(deleted)

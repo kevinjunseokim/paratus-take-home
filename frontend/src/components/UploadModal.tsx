@@ -243,7 +243,7 @@ export function UploadModal({ onClose, onRosterChanged }: UploadModalProps) {
         aria-labelledby="upload-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <div inert={confirmClose ? true : undefined}>
+        <div className="upload-modal-body" inert={confirmClose ? true : undefined}>
           <div className="modal-header">
             <h2 id="upload-title">Upload roster</h2>
             <button type="button" className="secondary" onClick={requestClose}>
@@ -299,54 +299,56 @@ export function UploadModal({ onClose, onRosterChanged }: UploadModalProps) {
 
           {phase === 'review' && preview && (
             <div className="upload-modal-review">
-              <p className="muted">
-                <strong>{preview.filename}</strong>
-              </p>
-
-              <div className="upload-result-tabs">
-                <button
-                  type="button"
-                  className={`upload-result-tab${resultTab === 'success' ? ' active' : ''}`}
-                  onClick={() => switchTab('success')}
-                >
-                  Success ({preview.successes.length})
-                </button>
-                <button
-                  type="button"
-                  className={`upload-result-tab${resultTab === 'failure' ? ' active' : ''}`}
-                  onClick={() => switchTab('failure')}
-                >
-                  Failures ({preview.failures.length})
-                </button>
-              </div>
-
-              <div className="pagination upload-pagination">
-                <p className="muted count">
-                  {allRows.length === 0
-                    ? 'No rows'
-                    : `Showing ${from}–${to} of ${allRows.length}`}
+              <div className="upload-modal-review-top">
+                <p className="muted">
+                  <strong>{preview.filename}</strong>
                 </p>
-                <div className="filter-actions">
+
+                <div className="upload-result-tabs">
                   <button
                     type="button"
-                    className="secondary"
-                    disabled={safePage <= 0 || allRows.length === 0}
-                    onClick={() => setPage((p) => Math.max(0, p - 1))}
+                    className={`upload-result-tab${resultTab === 'success' ? ' active' : ''}`}
+                    onClick={() => switchTab('success')}
                   >
-                    Previous
+                    Success ({preview.successes.length})
                   </button>
-                  <span className="muted page-indicator">
-                    Page {allRows.length === 0 ? 0 : safePage + 1} /{' '}
-                    {allRows.length === 0 ? 0 : pageCount}
-                  </span>
                   <button
                     type="button"
-                    className="secondary"
-                    disabled={safePage + 1 >= pageCount || allRows.length === 0}
-                    onClick={() => setPage((p) => p + 1)}
+                    className={`upload-result-tab${resultTab === 'failure' ? ' active' : ''}`}
+                    onClick={() => switchTab('failure')}
                   >
-                    Next
+                    Failures ({preview.failures.length})
                   </button>
+                </div>
+
+                <div className="pagination upload-pagination">
+                  <p className="muted count">
+                    {allRows.length === 0
+                      ? 'No rows'
+                      : `Showing ${from}–${to} of ${allRows.length}`}
+                  </p>
+                  <div className="filter-actions">
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={safePage <= 0 || allRows.length === 0}
+                      onClick={() => setPage((p) => Math.max(0, p - 1))}
+                    >
+                      Previous
+                    </button>
+                    <span className="muted page-indicator">
+                      Page {allRows.length === 0 ? 0 : safePage + 1} /{' '}
+                      {allRows.length === 0 ? 0 : pageCount}
+                    </span>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={safePage + 1 >= pageCount || allRows.length === 0}
+                      onClick={() => setPage((p) => p + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -391,52 +393,54 @@ export function UploadModal({ onClose, onRosterChanged }: UploadModalProps) {
                 </table>
               </div>
 
-              <div className="pagination upload-pagination">
-                <p className="muted count">
-                  {allRows.length === 0
-                    ? 'No rows'
-                    : `Showing ${from}–${to} of ${allRows.length}`}
-                </p>
-                <div className="filter-actions">
-                  <button
-                    type="button"
-                    className="secondary"
-                    disabled={safePage <= 0 || allRows.length === 0}
-                    onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  >
-                    Previous
+              <div className="upload-review-footer">
+                <div className="pagination upload-pagination">
+                  <p className="muted count">
+                    {allRows.length === 0
+                      ? 'No rows'
+                      : `Showing ${from}–${to} of ${allRows.length}`}
+                  </p>
+                  <div className="filter-actions">
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={safePage <= 0 || allRows.length === 0}
+                      onClick={() => setPage((p) => Math.max(0, p - 1))}
+                    >
+                      Previous
+                    </button>
+                    <span className="muted page-indicator">
+                      Page {allRows.length === 0 ? 0 : safePage + 1} /{' '}
+                      {allRows.length === 0 ? 0 : pageCount}
+                    </span>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={safePage + 1 >= pageCount || allRows.length === 0}
+                      onClick={() => setPage((p) => p + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+
+                <div className="upload-review-actions">
+                  <button type="button" className="secondary" onClick={() => void handleChooseAnother()}>
+                    Choose another file
                   </button>
-                  <span className="muted page-indicator">
-                    Page {allRows.length === 0 ? 0 : safePage + 1} /{' '}
-                    {allRows.length === 0 ? 0 : pageCount}
-                  </span>
                   <button
                     type="button"
-                    className="secondary"
-                    disabled={safePage + 1 >= pageCount || allRows.length === 0}
-                    onClick={() => setPage((p) => p + 1)}
+                    className="primary"
+                    disabled={!preview.can_commit || committing}
+                    onClick={() => void handleApprove()}
                   >
-                    Next
+                    {committing
+                      ? 'Applying…'
+                      : preview.can_commit
+                        ? `Approve & apply (${preview.accepted_rows})`
+                        : 'Nothing to apply'}
                   </button>
                 </div>
-              </div>
-
-              <div className="upload-review-actions">
-                <button type="button" className="secondary" onClick={() => void handleChooseAnother()}>
-                  Choose another file
-                </button>
-                <button
-                  type="button"
-                  className="primary"
-                  disabled={!preview.can_commit || committing}
-                  onClick={() => void handleApprove()}
-                >
-                  {committing
-                    ? 'Applying…'
-                    : preview.can_commit
-                      ? `Approve & apply (${preview.accepted_rows})`
-                      : 'Nothing to apply'}
-                </button>
               </div>
             </div>
           )}

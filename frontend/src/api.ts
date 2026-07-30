@@ -2,6 +2,7 @@ import type {
   CatalogOut,
   ChatMessage,
   ChatResponse,
+  ClearRosterOut,
   MemberFilters,
   MembersPage,
   PreviewOut,
@@ -64,6 +65,12 @@ export function commitRoster(uploadId: string): Promise<UploadOut> {
 
 export function discardRoster(uploadId: string): Promise<null> {
   return request<null>(apiUrl(`/api/roster/${uploadId}`), {
+    method: 'DELETE',
+  })
+}
+
+export function clearRoster(): Promise<ClearRosterOut> {
+  return request<ClearRosterOut>(apiUrl('/api/roster/members'), {
     method: 'DELETE',
   })
 }

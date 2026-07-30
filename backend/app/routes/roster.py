@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, File, Request, UploadFile
 from app.config import Settings, get_settings
 from app.deps import get_import_service
 from app.exceptions import RosterImportError
-from app.schemas import PreviewOut, UploadOut
+from app.schemas import ClearRosterOut, PreviewOut, UploadOut
 from app.services.import_service import ImportService
 
 router = APIRouter(prefix="/api/roster", tags=["roster"])
@@ -39,6 +39,14 @@ def list_roster_uploads(
 ) -> list[UploadOut]:
     service.discard_stale_pending(max_age=timedelta(hours=24))
     return service.list_uploads()
+
+
+@router.delete("/members", response_model=ClearRosterOut)
+def clear_roster_members(
+    service: ImportService = Depends(get_import_service),
+) -> ClearRosterOut:
+    deleted = service.clear_roster()
+    return ClearRosterOut(deleted_members=deleted)
 
 
 @router.post("/{upload_id}/commit", response_model=UploadOut)

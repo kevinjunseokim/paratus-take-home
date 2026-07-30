@@ -289,11 +289,35 @@ code {
 }
 
 .panel {
+  position: relative;
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
   border: 1px solid var(--neutral-4);
   border-radius: var(--radius);
   padding: 1.35rem 1.4rem 1.6rem;
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35);
+}
+
+.panel-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-bottom: 1.15rem;
+}
+
+.panel-heading-row h2 {
+  margin-bottom: 0.35rem;
+}
+
+.panel-heading-row .muted {
+  margin: 0;
+  max-width: 42rem;
+}
+
+.panel-confirm-overlay {
+  position: absolute;
+  border-radius: inherit;
 }
 
 .panel h2 {
@@ -340,11 +364,28 @@ code {
   overflow: hidden;
 }
 
+.upload-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .upload-modal-review {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
+  overflow: hidden;
+}
+
+.upload-modal-review-top {
+  flex: 0 0 auto;
+}
+
+.upload-modal-review-top > .muted {
+  margin: 0;
 }
 
 .upload-dropzone {
@@ -440,12 +481,23 @@ code {
   margin-top: 0;
 }
 
+.upload-review-footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 0.35rem;
+  background: linear-gradient(180deg, transparent 0%, var(--surface-2) 28%);
+}
+
+.upload-review-footer .upload-pagination {
+  margin-bottom: 0.55rem;
+}
+
 .upload-review-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.55rem;
-  margin-top: 0.75rem;
+  margin-top: 0;
   flex: 0 0 auto;
 }
 
@@ -679,6 +731,20 @@ button.primary:hover:not(:disabled) {
   background-color: color-mix(in srgb, var(--accent) 88%, white);
   color: #fff;
   box-shadow: 0 0 2rem rgba(77, 101, 255, 0.45);
+}
+
+button.danger {
+  background-image: none;
+  background-color: transparent;
+  color: #fda29b;
+  border-color: color-mix(in srgb, var(--error) 55%, var(--neutral-4));
+}
+
+button.danger:hover:not(:disabled) {
+  color: #fff;
+  background-color: var(--error);
+  border-color: var(--error);
+  box-shadow: 0 0 2rem color-mix(in srgb, var(--error) 40%, transparent);
 }
 
 .filter-actions {

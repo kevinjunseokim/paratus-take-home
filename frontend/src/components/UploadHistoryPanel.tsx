@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState, Fragment } from 'react'
-import { isAbortError, listUploads } from '../api'
+import { clearRoster, isAbortError, listUploads } from '../api'
 import type { UploadOut, UploadStatus } from '../types'
 
 interface UploadHistoryPanelProps {
   refreshKey: number
   onBack: () => void
+  onRosterCleared: () => void
 }
 
 function formatUploadedAt(value: string | null): string {
@@ -18,11 +19,17 @@ function statusClass(status: UploadStatus): string {
   return 'status-pill status-pending'
 }
 
-export function UploadHistoryPanel({ refreshKey, onBack }: UploadHistoryPanelProps) {
+export function UploadHistoryPanel({
+  refreshKey,
+  onBack,
+  onRosterCleared,
+}: UploadHistoryPanelProps) {
   const [uploads, setUploads] = useState<UploadOut[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [confirmClear, setConfirmClear] = useState(false)
+  const [clearing, setClearing] = useState(false)
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
@@ -46,13 +53,40 @@ export function UploadHistoryPanel({ refreshKey, onBack }: UploadHistoryPanelPro
     return () => controller.abort()
   }, [load, refreshKey])
 
+  async function handleClearRoster() {
+    setClearing(true)
+    setError(null)
+    try {
+      await clearRoster()
+      setConfirmClear(false)
+      onRosterCleared()
+      await load()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to clear roster')
+    } finally {
+      setClearing(false)
+    }
+  }
+
   return (
     <section className="panel">
       <button type="button" className="secondary back-btn" onClick={onBack}>
         ← Back to roster
       </button>
-      <h2>Upload history</h2>
-      <p className="muted">Results of past roster uploads.</p>
+      <div className="panel-heading-row">
+        <div>
+          <h2>Upload history</h2>
+          <p className="muted">Results of past roster uploads.</p>
+        </div>
+        <button
+          type="button"
+          className="danger"
+          disabled={clearing}
+          onClick={() => setConfirmClear(true)}
+        >
+          Clear roster
+        </button>
+      </div>
 
       {error && <p className="error">{error}</p>}
       {loading && <p className="muted">Loading uploads…</p>}
@@ -138,6 +172,42 @@ export function UploadHistoryPanel({ refreshKey, onBack }: UploadHistoryPanelPro
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {confirmClear && (
+        <div
+          className="confirm-overlay panel-confirm-overlay"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="confirm-clear-title"
+          aria-describedby="confirm-clear-desc"
+        >
+          <div className="confirm-card">
+            <h3 id="confirm-clear-title">Clear entire roster?</h3>
+            <p id="confirm-clear-desc" className="muted">
+              This deletes every service member from the database. Upload history is kept.
+              This can’t be undone.
+            </p>
+            <div className="confirm-actions">
+              <button
+                type="button"
+                className="secondary"
+                disabled={clearing}
+                onClick={() => setConfirmClear(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="danger"
+                disabled={clearing}
+                onClick={() => void handleClearRoster()}
+              >
+                {clearing ? 'Clearing…' : 'Clear roster'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>

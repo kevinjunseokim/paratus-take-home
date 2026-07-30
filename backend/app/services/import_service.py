@@ -91,6 +91,8 @@ class ImportService:
             raise RosterImportError("Only pending previews can be committed")
         if upload.accepted_rows <= 0:
             raise RosterImportError("Preview has no accepted rows to commit")
+        if not self._repo.list_members_for_upload(upload.id):
+            raise RosterImportError("Preview has no staged members to commit")
 
         self._repo.activate_succeeded(
             upload,
@@ -112,6 +114,11 @@ class ImportService:
             raise RosterImportError("Cannot discard the active roster")
         self._repo.delete_upload(upload)
         self._session.commit()
+
+    def clear_roster(self) -> int:
+        deleted = self._repo.clear_all_members()
+        self._session.commit()
+        return deleted
 
     def discard_stale_pending(self, *, max_age: timedelta) -> int:
         cutoff = datetime.now(timezone.utc) - max_age

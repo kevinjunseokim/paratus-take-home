@@ -23,6 +23,10 @@ export interface UploadOut {
   issues: IssueOut[]
 }
 
+export interface ClearRosterOut {
+  deleted_members: number
+}
+
 export interface PreviewRowOut {
   row: number | null
   status: 'success' | 'failure'

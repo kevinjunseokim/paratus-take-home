@@ -95,7 +95,11 @@ export default function App() {
           />
         )}
         {view === 'history' && (
-          <UploadHistoryPanel refreshKey={rosterRefreshKey} onBack={handleBackToRoster} />
+          <UploadHistoryPanel
+            refreshKey={rosterRefreshKey}
+            onBack={handleBackToRoster}
+            onRosterCleared={handleRosterChanged}
+          />
         )}
         <div className={!onSearchSurface ? 'view-hidden' : undefined} aria-hidden={!onSearchSurface}>
           <div className="search-tabs" role="tablist" aria-label="Search mode">

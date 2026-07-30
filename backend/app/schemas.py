@@ -33,6 +33,10 @@ class UploadOut(BaseModel):
     issues: list[IssueOut] = Field(default_factory=list)
 
 
+class ClearRosterOut(BaseModel):
+    deleted_members: int
+
+
 class PreviewRowOut(BaseModel):
     row: int | None = None
     status: str  # success | failure

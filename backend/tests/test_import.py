@@ -230,3 +230,27 @@ def test_unexpected_import_error_does_not_return_soft_failure(db: Session, monke
             content=_workbook_bytes([["DODID", "Name", "AFSC"], ["1", "A", "11M3K"]]),
         )
     assert _active(service) is None
+
+
+def test_clear_roster_removes_all_members(db: Session):
+    service = ImportService(db, AfscEngine())
+    _activate(
+        service,
+        filename="first.xlsx",
+        content=_workbook_bytes(
+            [
+                ["DODID", "Name", "AFSC"],
+                ["1001", "Jane Doe", "1A152D"],
+                ["1002", "John Pilot", "11M3K"],
+            ]
+        ),
+    )
+    members = MemberService(db, AfscEngine()).list_members(limit=50)
+    assert len(members) == 2
+
+    deleted = service.clear_roster()
+    assert deleted == 2
+    assert MemberService(db, AfscEngine()).list_members(limit=50) == []
+    assert _active(service) is None
+    # Upload history is retained
+    assert len(service.list_uploads()) >= 1
